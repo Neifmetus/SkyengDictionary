@@ -49,6 +49,16 @@ extension TranslationsViewController: UITableViewDelegate, UITableViewDataSource
         viewModel.meanings.count
     }
     
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if let selectedRow = viewModel.selectedRow,
+           selectedRow == indexPath.row {
+            let url = viewModel.meanings[indexPath.row].imageUrl ?? ""
+            let image = viewModel.getImageFrom(urlString: url)
+            return (image?.size.height ?? 0) * 0.5 + 64
+        }
+        return 44
+    }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if let selectedRow = viewModel.selectedRow,
            selectedRow == indexPath.row {
@@ -66,9 +76,15 @@ extension TranslationsViewController: UITableViewDelegate, UITableViewDataSource
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        var involvedRows: [IndexPath] = [indexPath]
+        if let selectedRow = viewModel.selectedRow {
+            let oldIndexPath = IndexPath(row: selectedRow, section: 0)
+            involvedRows.append(oldIndexPath)
+        }
+        
         viewModel.selectedRow = indexPath.row
         
         tableView.deselectRow(at: indexPath, animated: true)
-        tableView.reloadData()
+        tableView.reloadRows(at: involvedRows, with: .fade)
     }
 }

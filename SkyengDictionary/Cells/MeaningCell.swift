@@ -17,11 +17,13 @@ class MeaningCell: UITableViewCell {
     
     private lazy var label = UILabel()
     
+    // MARK: Initialization
+    
     init(model: MeaningViewModel) {
         self.model = model
         super.init(style: .default, reuseIdentifier: "meaningCell")
         label.text = model.text
-        previewImageView.image = model.image
+        previewImageView.image = prepareImage(model.image)
         self.setupLayout()
     }
 
@@ -43,7 +45,12 @@ class MeaningCell: UITableViewCell {
             NSLayoutConstraint.activate([
                 previewImageView.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 16),
                 previewImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-                previewImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16)
             ])
+    }
+    
+    // MARK: Private
+    
+    func prepareImage(_ image: UIImage?) -> UIImage? {
+        return image?.resize(with: 0.5)
     }
 }
